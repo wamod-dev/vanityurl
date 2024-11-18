@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: vanityurl
+
+snapshot:
+  version_template: "0.0.1-rc1"
+env:
+  - CGO_ENABLED=0
+
+before:
+  hooks:
+    - go mod download
+    - go -C cmd/vanityurl mod download
+
+builds:
+  - binary: vanityurl
+    flags: "-trimpath"
+    main: "./cmd/vanityurl"
+    ldflags:
+      - -s -w
+      - -X go.wamod.dev/vanityurl/cmd/vanityurl/version.version={{.Version}}
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^fix\\(ci\\):"
+      - "^chore:"
+      - "^docs:"
+
+release:
+  prerelease: auto
+
+dockers:
+  - image_templates:
+      - "wamod/vanityurl:{{ with .Prerelease }}{{.}}-{{ end }}amd64"
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}-amd64"
+      - "wamod/vanityurl:v{{ .Major }}{{ with .Prerelease }}-{{.}}{{ end }}-amd64"
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}{{ with .Prerelease }}-{{.}}{{ end }}-amd64"
+    use: buildx
+    goarch: amd64
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version=v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}"
+  - image_templates:
+      - "wamod/vanityurl:{{ with .Prerelease }}{{.}}-{{ end }}arm64"
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}-arm64"
+      - "wamod/vanityurl:v{{ .Major }}{{ with .Prerelease }}-{{.}}{{ end }}-arm64"
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}{{ with .Prerelease }}-{{.}}{{ end }}-arm64"
+    use: buildx
+    goarch: arm64
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version=v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}"
+
+docker_manifests:
+  - name_template: "wamod/vanityurl:{{ with .Prerelease }}{{.}}{{ else }}latest{{ end }}"
+    image_templates:
+      - "wamod/vanityurl:{{ with .Prerelease }}{{.}}-{{ end }}amd64"
+      - "wamod/vanityurl:{{ with .Prerelease }}{{.}}-{{ end }}arm64"
+  - name_template: "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}"
+    image_templates:
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}-amd64"
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{.}}{{ end }}-arm64"
+  - name_template: "wamod/vanityurl:v{{ .Major }}{{ with .Prerelease }}-{{.}}{{ end }}"
+    image_templates:
+      - "wamod/vanityurl:v{{ .Major }}{{ with .Prerelease }}-{{.}}{{ end }}-amd64"
+      - "wamod/vanityurl:v{{ .Major }}{{ with .Prerelease }}-{{.}}{{ end }}-arm64"
+  - name_template: "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}{{ with .Prerelease }}-{{.}}{{ end }}"
+    image_templates:
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}{{ with .Prerelease }}-{{.}}{{ end }}-amd64"
+      - "wamod/vanityurl:v{{ .Major }}.{{ .Minor }}{{ with .Prerelease }}-{{.}}{{ end }}-arm64"

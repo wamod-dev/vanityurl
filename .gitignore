@@ -1,0 +1,17 @@
+.DS_Store
+.env
+
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+coverage.txt
+
+go.work
+go.work.sum
+
+vendor/
+dist/

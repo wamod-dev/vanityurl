@@ -1,0 +1,34 @@
+name: go
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.23.2
+    - name: audit/tidy
+      run: make audit/tidy
+    - name: audit/format
+      run: make audit/format
+    - name: audit/vet
+      run: make audit/vet
+    - name: audit/vulnerabilities
+      run: make audit/vulnerabilities
+    - name: audit/lint
+      run: make audit/lint
+    - name: test/cover
+      run: make test/cover
+    - name: codecov
+      uses: codecov/codecov-action@v4
+      if: github.ref == 'refs/heads/main'
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

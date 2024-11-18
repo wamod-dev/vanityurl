@@ -1,0 +1,49 @@
+linters:
+  enable:
+    - dogsled
+    - dupl
+    - gofmt
+    - goimports
+    - gosec
+    - misspell
+    - nakedret
+    - stylecheck
+    - unconvert
+    - unparam
+    - whitespace
+    - errcheck
+    - depguard
+    - gci
+    - bodyclose
+    - errname
+    - errorlint
+    - copyloopvar
+    - gochecknoinits
+    - gochecknoglobals
+    - err113
+    - gocyclo
+    - nestif
+    - nlreturn
+    - nolintlint
+    - prealloc
+    - revive
+    - unused
+    - wastedassign
+    - wsl
+    - rowserrcheck
+    - sqlclosecheck
+
+linters-settings:
+  depguard:
+    rules:
+      main:
+        list-mode: strict
+        allow:
+          - $gostd
+          - go.wamod.dev/vanityurl
+          - gopkg.in/yaml.v3
+  gci:
+    sections:
+      - Standard
+      - Default
+      - Prefix(go.wamod.dev/vanityurl)

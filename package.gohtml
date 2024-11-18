@@ -1,0 +1,17 @@
+{{- define "document" -}}
+<!DOCTYPE html>
+<html>
+<head>
+{{ template "head" . }}
+<meta http-equiv="refresh" content="0; url=https://pkg.go.dev/{{.Host}}{{.Package.Path}}/{{.Subpath}}">
+</head>
+<body>
+Nothing to see here; <a href="https://pkg.go.dev/{{.Host}}{{.Package.Path}}/{{.Subpath}}">see the package on pkg.go.dev</a>.
+</body>
+</html>
+{{- end -}}
+
+{{- define "head" -}}
+<meta name="go-import" content="{{.Host}}{{.Package.Path}} {{.Package.VCS}} {{.Package.RepositoryURL}}">
+<meta name="go-source" content="{{.Host}}{{.Package.Path}} {{.Package.Display}}">
+{{- end -}}
