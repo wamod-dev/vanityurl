@@ -45,9 +45,9 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - name: refresh pkg.go.dev
-      #   env:
-      #     GOPROXY: "https://proxy.golang.org"
-      #     GO111MODULE: "on"
-      #   run: go get go.wamod.dev/vanityurl@${{ github.ref_name }}
+      - name: refresh pkg.go.dev
+        env:
+          GOPROXY: "https://proxy.golang.org"
+          GO111MODULE: "on"
+        run: go get go.wamod.dev/vanityurl@${{ github.ref_name }}
    
